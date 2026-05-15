@@ -23,6 +23,13 @@ export SDK_PATH="/Users/valgard/Projects/private/core_keeper/CoreKeeperModSDK"
 # SKIP_MACOS_INSTALL=1 to opt out of the auto-install step.
 export MOD_INSTALL_PATH="$HOME/Library/Caches/faster-talents-build/"
 
+# Core Keeper game version, written as the mod.io compatibility tag in the
+# fake mod.io install (scripts/install-macos.sh). Core Keeper's loader runs
+# ModVersion.IsCompatible(gameVersion, modProfile.tags); without a matching
+# tag the mod is rejected as "not compatible with current version". Set this
+# to the version the game prints as `Game version: X` in Player.log.
+export CK_GAME_VERSION="1.2.1.2"
+
 # macOS only — CrossOver bottle that holds Core Keeper. Override only if
 # your bottle has a non-default name.
 # export CK_BOTTLE_PATH="$HOME/Library/Application Support/CrossOver/Bottles/Core Keeper"

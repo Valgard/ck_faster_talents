@@ -12,6 +12,10 @@
 #
 # Required env vars (set in .envrc):
 #   MOD_INSTALL_PATH   Directory containing the built `FasterTalents/` folder.
+#   CK_GAME_VERSION    Core Keeper game version, written as the mod.io
+#                      compatibility tag (step 3). Without a matching tag the
+#                      loader rejects the mod as "not compatible with current
+#                      version".
 #
 # Optional env vars:
 #   CK_BOTTLE_PATH     CrossOver bottle path. Defaults to the standard
@@ -25,6 +29,7 @@
 set -euo pipefail
 
 : "${MOD_INSTALL_PATH:?must be set in .envrc — see .envrc.example}"
+: "${CK_GAME_VERSION:?must be set in .envrc — see .envrc.example}"
 
 # --- Project-specific constants ----------------------------------------------
 
@@ -109,6 +114,7 @@ jq --arg user "$USER_ID" \
    --arg nameId "$MOD_NAME_ID" \
    --arg displayName "$MOD_DISPLAY_NAME" \
    --arg summary "$MOD_SUMMARY" \
+   --arg gameVersion "$CK_GAME_VERSION" \
    '
    (.existingUsers[$user].subscribedMods) |=
        (if index($modid) then . else . + [$modid] end)
@@ -128,6 +134,7 @@ jq --arg user "$USER_ID" \
            name: $name,
            name_id: $nameId,
            summary: $summary,
+           tags: [ { name: $gameVersion, date_added: "0" } ],
            modfile: { id: $modfileNum, mod_id: $modidNum }
        }
    }
