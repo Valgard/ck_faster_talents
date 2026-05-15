@@ -1,0 +1,20 @@
+{
+    "name": "FasterTalents.Editor",
+    "rootNamespace": "FasterTalents.Editor",
+    "references": [
+        "FasterTalents",
+        "ModSDK.Editor",
+        "PugMod.SDK"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
