@@ -20,7 +20,7 @@ This mod changes only the player skill talents. Pet talents are untouched.
 
 ## Configuration
 
-The rank-to-point ratio is a source constant in `src/ModConfig.cs`
+The rank-to-point ratio is a source constant in `unity/FasterTalents/ModConfig.cs`
 (`ranksPerTalentPoint`, default `1`; vanilla is `5`). Pugstorm's RoslynCSharp
 sandbox blocks runtime file I/O, so there is no `config.json` — change the
 constant and rebuild. Setting `ranksPerTalentPoint = 5` restores vanilla

@@ -1,42 +1,53 @@
 #!/usr/bin/env bash
-# scripts/link.sh — Idempotently create symlinks from the SDK clone's
-# Assets/FasterTalents/ folder back to this repo's src/.
+# scripts/link.sh — Idempotently symlink the mod into the shared SDK clone.
+#
+# The mod's canonical files live in this repo under `unity/`, laid out as a
+# 1:1 mirror of the SDK's `Assets/` tree. This script links that mirror into
+# the SDK clone so Unity builds against it:
+#
+#   $SDK_PATH/Assets/FasterTalents            -> unity/FasterTalents/   (dir symlink)
+#   $SDK_PATH/Assets/FasterTalents.asset      -> unity/FasterTalents.asset
+#   $SDK_PATH/Assets/FasterTalents.asset.meta -> unity/FasterTalents.asset.meta
+#   $SDK_PATH/Assets/FasterTalents.meta       -> unity/FasterTalents.meta
+#
+# The single directory symlink captures every file inside the mod folder —
+# including ones the Unity Editor adds later — so nothing has to be wired up
+# here by hand. The three Assets-level files sit beside the mod folder (the
+# ModBuilderSettings asset + the folder's own .meta) and need their own links.
 #
 # Required env vars (set in .envrc):
 #   SDK_PATH   Path to the cloned Pugstorm CoreKeeperModSDK
 #
-# Preconditions:
-#   - SDK_PATH/Assets/FasterTalents/ must already exist (created by the
-#     PugMod → Open Mod SDK Window → "Create New Mod" wizard).
-#
-# Symlinks use absolute paths, so re-run after moving either repo (or after
-# a worktree switch). build.sh invokes this on every run.
+# The symlinks encode an absolute path, so they dangle after a worktree
+# switch or repo move. `build.sh` re-runs this on every build; run it
+# standalone only when iterating on the SDK side outside of `build.sh`.
 
 set -euo pipefail
 
 : "${SDK_PATH:?must be set in .envrc}"
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SDK_MOD_DIR="$SDK_PATH/Assets/FasterTalents"
+ASSETS="$SDK_PATH/Assets"
+MIRROR="$REPO_ROOT/unity"
 
-if [ ! -d "$SDK_MOD_DIR" ]; then
-    echo "ERROR: SDK mod dir not found: $SDK_MOD_DIR" >&2
-    echo "Create it first via PugMod → Open Mod SDK Window → Create New Mod." >&2
+if [ ! -d "$ASSETS" ]; then
+    echo "ERROR: SDK Assets dir not found: $ASSETS" >&2
+    echo "Is SDK_PATH correct, and has the SDK been set up?" >&2
     exit 1
 fi
 
-cd "$SDK_MOD_DIR"
-mkdir -p Editor
+if [ ! -d "$MIRROR/FasterTalents" ]; then
+    echo "ERROR: mod mirror not found: $MIRROR/FasterTalents" >&2
+    exit 1
+fi
 
-# -s symbolic, -f force overwrite, -n don't dereference an existing dir-link
-ln -sfn "$REPO_ROOT/src/FasterTalentsMod.cs"          FasterTalentsMod.cs
-ln -sfn "$REPO_ROOT/src/ModConfig.cs"                 ModConfig.cs
-ln -sfn "$REPO_ROOT/src/TalentPointFormulaPatch.cs"   TalentPointFormulaPatch.cs
-ln -sfn "$REPO_ROOT/src/TalentPopupEveryRankPatch.cs" TalentPopupEveryRankPatch.cs
-ln -sfn "$REPO_ROOT/src/Editor/CLIBuildHelper.cs"             Editor/CLIBuildHelper.cs
-ln -sfn "$REPO_ROOT/src/Editor/FasterTalents.Editor.asmdef"   Editor/FasterTalents.Editor.asmdef
+# -s symbolic, -f overwrite existing link, -n don't dereference an existing
+# symlink-to-dir (so re-runs replace the link instead of nesting inside it).
+ln -sfn "$MIRROR/FasterTalents"            "$ASSETS/FasterTalents"
+ln -sfn "$MIRROR/FasterTalents.asset"      "$ASSETS/FasterTalents.asset"
+ln -sfn "$MIRROR/FasterTalents.asset.meta" "$ASSETS/FasterTalents.asset.meta"
+ln -sfn "$MIRROR/FasterTalents.meta"       "$ASSETS/FasterTalents.meta"
 
-echo "✓ Symlinks created in $SDK_MOD_DIR:"
-ls -la FasterTalentsMod.cs ModConfig.cs TalentPointFormulaPatch.cs \
-       TalentPopupEveryRankPatch.cs Editor/CLIBuildHelper.cs \
-       Editor/FasterTalents.Editor.asmdef
+echo "✓ Symlinks created in $ASSETS:"
+ls -la "$ASSETS/FasterTalents" "$ASSETS/FasterTalents.asset" \
+       "$ASSETS/FasterTalents.asset.meta" "$ASSETS/FasterTalents.meta"

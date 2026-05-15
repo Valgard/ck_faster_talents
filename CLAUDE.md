@@ -15,7 +15,7 @@ source .envrc           # exports UNITY_BIN, SDK_PATH, MOD_INSTALL_PATH
 ./scripts/build.sh      # Unity batchmode build; on Darwin auto-runs install-macos.sh
 ```
 
-Unity Editor must be closed (it locks the project). `scripts/link.sh` symlinks `src/` into `$SDK_PATH/Assets/FasterTalents/`; `build.sh` invokes it idempotently so worktree switches self-heal.
+Unity Editor must be closed (it locks the project). `scripts/link.sh` symlinks the repo's `unity/` mirror into `$SDK_PATH/Assets/`: one **directory** symlink for `unity/FasterTalents/`, plus three file symlinks for the Assets-level files beside it (`FasterTalents.asset`, `.asset.meta`, `.meta`). `build.sh` invokes it idempotently on every run, so worktree switches and repo moves self-heal.
 
 No automated tests. Verification is the manual test plan in the spec §12 / plan Task 13.
 
@@ -27,9 +27,11 @@ Four runtime classes plus one editor helper, all in the `FasterTalents` namespac
 - **`ModConfig`** — hardcoded constants `enabled`, `ranksPerTalentPoint` (default 1), `maxSkillBonusPoints` (default 5). No runtime config file — the RoslynCSharp sandbox blocks `System.IO`.
 - **`TalentPointFormulaPatch`** — `Prefix` replacing `SaveManager.GetAvailableTalentPoints`; computes `rank / ranksPerTalentPoint` plus the re-gated max-rank bonus.
 - **`TalentPopupEveryRankPatch`** — `Postfix` on `PlayerController.SpawnSkillIncreasePopup`; fires `SpawnNewSkillPopup` on the ranks vanilla skips. Only acts when `ranksPerTalentPoint == 1`.
-- **`Editor/CLIBuildHelper`** — wraps `ModBuilder.BuildMod` for `unity -batchmode -executeMethod`. Own asmdef (`src/Editor/FasterTalents.Editor.asmdef`) because editor-only types cannot be referenced from a combined asmdef.
+- **`Editor/CLIBuildHelper`** — wraps `ModBuilder.BuildMod` for `unity -batchmode -executeMethod`. Own asmdef (`unity/FasterTalents/Editor/FasterTalents.Editor.asmdef`) because editor-only types cannot be referenced from a combined asmdef.
 
-`src/` is canonical. The SDK clone's `Assets/FasterTalents/` holds symlinks back to `src/`. The SDK's runtime `FasterTalents.asmdef` is used exactly as the "Create New Mod" wizard generated it — the current SDK wizard already emits a comprehensive game-DLL reference set (`Pug.Other.dll`, `0Harmony.dll`, `PugMod.SDK.Runtime.dll`, etc.), so no manual customization is needed. That asmdef lives only in the SDK clone, not this repo.
+`unity/` is the canonical source — a 1:1 mirror of the SDK's `Assets/` tree holding **every** file the Unity Editor generates for the mod: the `.cs` sources, both `.asmdef` files, the ModBuilderSettings `.asset`, and all `.meta` files (GUID carriers — versioned per Unity convention). The SDK clone's `Assets/FasterTalents` is a **directory symlink** into `unity/FasterTalents/` (created by `scripts/link.sh`); because it is a directory symlink, any file the Editor adds later is captured automatically. Edit in `unity/`; the SDK picks up the change on the next refresh.
+
+The runtime `FasterTalents.asmdef` is the SDK "Create New Mod" wizard's output used unmodified — the current wizard already emits a comprehensive game-DLL reference set (`Pug.Other.dll`, `0Harmony.dll`, `PugMod.SDK.Runtime.dll`, etc.), so no manual customization is needed. It is versioned here in `unity/FasterTalents/` like every other Editor-generated file.
 
 Patch targets were identified by decompiling the SDK's bundled game DLLs (`Pug.Other.dll`) with `ilspycmd`; the decompiled vanilla reference code is in spec §6.
 
