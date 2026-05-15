@@ -29,8 +29,7 @@ vanilla 5-rank cadence.
 
 ## Build (developer)
 
-See `docs/superpowers/specs/2026-05-15-faster-talents-design.md` §8 and
-`docs/superpowers/plans/2026-05-15-faster-talents-implementation.md`.
+See `CLAUDE.md` for the build and deploy procedure.
 
 ## License
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Core Keeper mod that grants one talent point per skill rank instead of the vanilla one per five ranks. Two Harmony patches against Pugstorm's `CoreKeeperModSDK`. Single-target, personal-use, non-commercial (Pugstorm EULA).
 
-The design spec is `docs/superpowers/specs/2026-05-15-faster-talents-design.md` and the implementation plan is `docs/superpowers/plans/2026-05-15-faster-talents-implementation.md`. Read those before changing scope, patch targets, or the build pipeline. The parent `../CLAUDE.md` holds the mod-agnostic SDK/CrossOver guidance shared with the sibling `disable-durability` mod.
+The parent `../CLAUDE.md` holds the mod-agnostic SDK/CrossOver guidance shared with the sibling `disable-durability` mod.
 
 ## Build and deploy
 
@@ -17,7 +17,7 @@ source .envrc           # exports UNITY_BIN, SDK_PATH, MOD_INSTALL_PATH
 
 Unity Editor must be closed (it locks the project). `scripts/link.sh` symlinks the repo's `unity/` mirror into `$SDK_PATH/Assets/`: one **directory** symlink for `unity/FasterTalents/`, plus three file symlinks for the Assets-level files beside it (`FasterTalents.asset`, `.asset.meta`, `.meta`). `build.sh` invokes it idempotently on every run, so worktree switches and repo moves self-heal.
 
-No automated tests. Verification is the manual test plan in the spec §12 / plan Task 13.
+No automated tests — verification is a manual in-game check: gain a skill rank, confirm the available talent-point count rises by one and the "new talent point" popup fires.
 
 ## Architecture
 
@@ -33,7 +33,7 @@ Four runtime classes plus one editor helper, all in the `FasterTalents` namespac
 
 The runtime `FasterTalents.asmdef` is the SDK "Create New Mod" wizard's output used unmodified — the current wizard already emits a comprehensive game-DLL reference set (`Pug.Other.dll`, `0Harmony.dll`, `PugMod.SDK.Runtime.dll`, etc.), so no manual customization is needed. It is versioned here in `unity/FasterTalents/` like every other Editor-generated file.
 
-Patch targets were identified by decompiling the SDK's bundled game DLLs (`Pug.Other.dll`) with `ilspycmd`; the decompiled vanilla reference code is in spec §6.
+Patch targets were identified by decompiling the SDK's bundled game DLLs (`Pug.Other.dll`) with `ilspycmd`.
 
 ## macOS / CrossOver
 
