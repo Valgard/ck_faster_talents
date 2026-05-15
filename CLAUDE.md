@@ -29,7 +29,7 @@ Four runtime classes plus one editor helper, all in the `FasterTalents` namespac
 - **`TalentPopupEveryRankPatch`** — `Postfix` on `PlayerController.SpawnSkillIncreasePopup`; fires `SpawnNewSkillPopup` on the ranks vanilla skips. Only acts when `ranksPerTalentPoint == 1`.
 - **`Editor/CLIBuildHelper`** — wraps `ModBuilder.BuildMod` for `unity -batchmode -executeMethod`. Own asmdef (`src/Editor/FasterTalents.Editor.asmdef`) because editor-only types cannot be referenced from a combined asmdef.
 
-`src/` is canonical. The SDK clone's `Assets/FasterTalents/` holds symlinks back to `src/`. The SDK's runtime `FasterTalents.asmdef` is customized in place (copied from the sibling mod for the full game-DLL reference set) with a `.wizard-original` backup — this customization lives only in the SDK clone, not this repo.
+`src/` is canonical. The SDK clone's `Assets/FasterTalents/` holds symlinks back to `src/`. The SDK's runtime `FasterTalents.asmdef` is used exactly as the "Create New Mod" wizard generated it — the current SDK wizard already emits a comprehensive game-DLL reference set (`Pug.Other.dll`, `0Harmony.dll`, `PugMod.SDK.Runtime.dll`, etc.), so no manual customization is needed. That asmdef lives only in the SDK clone, not this repo.
 
 Patch targets were identified by decompiling the SDK's bundled game DLLs (`Pug.Other.dll`) with `ilspycmd`; the decompiled vanilla reference code is in spec §6.
 
