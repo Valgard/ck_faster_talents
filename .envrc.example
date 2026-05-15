@@ -1,0 +1,28 @@
+# Faster Talents — environment variables
+#
+# Copy this file to `.envrc` and fill in your machine-specific paths.
+# `.envrc` is gitignored.
+#
+# Optional: install direnv (`brew install direnv`) so the file auto-loads
+# on `cd` into this directory.
+
+# Path to the Unity Editor binary (must be Unity 6000.0.59f2 per the SDK)
+export UNITY_BIN="/Applications/Unity/Hub/Editor/6000.0.59f2/Unity.app/Contents/MacOS/Unity"
+
+# Path to the cloned Pugstorm CoreKeeperModSDK (shared with the sibling mod)
+export SDK_PATH="/Users/valgard/Projects/private/core_keeper/CoreKeeperModSDK"
+
+# Directory where Pugstorm's ModBuilder writes its output. The builder
+# always appends a `FasterTalents/` subfolder, so the final layout is
+# `$MOD_INSTALL_PATH/FasterTalents/{ModManifest.json,Scripts,Bundles}`.
+#
+# macOS / CrossOver: leave this at the neutral staging path below.
+# Pugstorm's loader cannot extract Scripts/ from StreamingAssets under
+# Wine, so `./scripts/build.sh` auto-runs `./scripts/install-macos.sh`,
+# which copies from this staging dir into the mod.io load path. Set
+# SKIP_MACOS_INSTALL=1 to opt out of the auto-install step.
+export MOD_INSTALL_PATH="$HOME/Library/Caches/faster-talents-build/"
+
+# macOS only — CrossOver bottle that holds Core Keeper. Override only if
+# your bottle has a non-default name.
+# export CK_BOTTLE_PATH="$HOME/Library/Application Support/CrossOver/Bottles/Core Keeper"
