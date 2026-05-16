@@ -1,10 +1,10 @@
 # Faster Talents — Core Keeper Mod
 
-A small Core Keeper mod that grants one talent point per skill rank instead of the vanilla one per five ranks. Built on the official Pugstorm `CoreKeeperModSDK`.
+A small Core Keeper mod that replaces the vanilla talent-point curve with a faster two-tier curve — 40 talent points per maxed skill instead of vanilla's 25. Built on the official Pugstorm `CoreKeeperModSDK`.
 
 ## What it does
 
-Each player skill earns talent points as it ranks up. Vanilla grants one talent point every 5 ranks; this mod grants one every rank — five times faster. The "New talent point available!" popup and bell fire on every rank to match.
+Each player skill earns talent points as it levels up. Vanilla grants one point every 5 skill levels, plus 5 at the max level — 25 total. This mod uses a two-tier curve: one point every 3 levels up to level 60, then one every 2 levels to level 100 — **exactly 40 points per skill tree**, enough to fully skill one talent tree. The "New talent point available!" popup and bell fire on each level that grants a point.
 
 The effect is **retroactive**: an existing character immediately sees the talent points it would have earned under the new rate.
 
@@ -21,14 +21,19 @@ This mod changes only the player skill talents. Pet talents are untouched.
 ## Configuration
 
 There is no runtime `config.json` — Pugstorm's RoslynCSharp sandbox blocks file
-I/O. Configuration lives in three source constants in
+I/O. Configuration lives in five source constants in
 `unity/FasterTalents/ModConfig.cs`; edit them and rebuild to change behavior:
 
 | Constant | Default | Vanilla | Effect |
 |----------|---------|---------|--------|
-| `enabled` | `true` | — | Master switch. When `false`, both patches early-return and the game behaves exactly as vanilla. |
-| `ranksPerTalentPoint` | `1` | `5` | Skill ranks needed per earned talent point. Setting it to `5` restores vanilla behavior; at any value other than `1` the per-rank popup also reverts to the vanilla 5-rank cadence. |
-| `maxSkillBonusPoints` | `5` | `5` | Extra talent points granted once when a skill reaches its max rank. |
+| `enabled` | `true` | — | Master switch. When `false`, all patches fall through and the game behaves exactly as vanilla. |
+| `tier1MaxLevel` | `60` | — | Last skill level covered by the tier-1 rate. |
+| `tier1RanksPerPoint` | `3` | `5` | Skill levels needed per talent point at or below `tier1MaxLevel`. |
+| `tier2RanksPerPoint` | `2` | `5` | Skill levels needed per talent point above `tier1MaxLevel`. |
+| `maxSkillBonusPoints` | `0` | `5` | Extra talent points granted once when a skill reaches its max level (100). |
+
+Setting `tier1RanksPerPoint` and `tier2RanksPerPoint` both to `5` and
+`maxSkillBonusPoints` to `5` restores the vanilla curve.
 
 ## Build (developer)
 

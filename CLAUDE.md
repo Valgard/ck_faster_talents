@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A Core Keeper mod that grants one talent point per skill rank instead of the vanilla one per five ranks. Two Harmony patches against Pugstorm's `CoreKeeperModSDK`. Single-target, personal-use, non-commercial (Pugstorm EULA).
+A Core Keeper mod that replaces the vanilla talent-point curve (one point per 5 skill levels) with a two-tier curve: one point per 3 levels up to level 60, then one per 2 levels to 100 — 40 points total per skill tree. Three Harmony patches against Pugstorm's `CoreKeeperModSDK`. Single-target, personal-use, non-commercial (Pugstorm EULA).
 
 The parent `../CLAUDE.md` holds the mod-agnostic SDK/CrossOver guidance shared with the sibling `disable-durability` mod.
 
@@ -17,16 +17,16 @@ source .envrc           # exports UNITY_BIN, SDK_PATH, MOD_INSTALL_PATH, MOD_NAM
 
 Unity Editor must be closed (it locks the project). `utils/link.sh` symlinks the repo's `unity/` mirror into `$SDK_PATH/Assets/`: one **directory** symlink for `unity/FasterTalents/`, plus three file symlinks for the Assets-level files beside it (`FasterTalents.asset`, `.asset.meta`, `.meta`). `build.sh` invokes it idempotently on every run, so worktree switches and repo moves self-heal.
 
-No automated tests — verification is a manual in-game check: gain a skill rank, confirm the available talent-point count rises by one and the "new talent point" popup fires.
+No automated tests — verification is a manual in-game check: gain skill levels and confirm the available talent-point count and the "new talent point" popup track the two-tier formula (a point every 3 levels up to level 60, then every 2 to level 100).
 
 ## Architecture
 
-Four runtime classes plus one editor helper, all in the `FasterTalents` namespace:
+Five runtime classes plus one editor helper, all in the `FasterTalents` namespace:
 
-- **`FasterTalentsMod` (`IMod`)** — bootstrap; logs init. No `BurstDisabler` needed: neither patch target is Burst-compiled.
-- **`ModConfig`** — hardcoded constants `enabled`, `ranksPerTalentPoint` (default 1), `maxSkillBonusPoints` (default 5). No runtime config file — the RoslynCSharp sandbox blocks `System.IO`.
-- **`TalentPointFormulaPatch`** — `Prefix` replacing `SaveManager.GetAvailableTalentPoints`; computes `rank / ranksPerTalentPoint` plus the re-gated max-rank bonus.
-- **`TalentPopupEveryRankPatch`** — `Postfix` on `PlayerController.SpawnSkillIncreasePopup`; fires `SpawnNewSkillPopup` on the ranks vanilla skips. Only acts when `ranksPerTalentPoint == 1`.
+- **`FasterTalentsMod` (`IMod`)** — bootstrap; logs init. No `BurstDisabler` needed: none of the patch targets are Burst-compiled.
+- **`ModConfig`** — hardcoded constants `enabled`, `tier1MaxLevel` (60), `tier1RanksPerPoint` (3), `tier2RanksPerPoint` (2), `maxSkillBonusPoints` (0), plus `TalentPointsAtLevel(level)` — the shared two-tier formula. No runtime config file — the RoslynCSharp sandbox blocks `System.IO`.
+- **`TalentPointFormulaPatch`** — `Prefix` replacing `SaveManager.GetAvailableTalentPoints`; returns `ModConfig.TalentPointsAtLevel(level)` plus the re-gated max-rank bonus (0 by default).
+- **`TalentPopupOnGrantPatch`** — `Prefix`+`Postfix` on `SaveManager.SetSkillValue`; uses Harmony `__state` to compare the talent total before and after the change and fires `SpawnNewSkillPopup` once when a grant level is crossed. The companion **`SpawnNewSkillPopupGate`** (`Prefix` on `PlayerController.SpawnNewSkillPopup`) suppresses vanilla's every-5th-level popup so the popup has one formula-driven source.
 - **`Editor/CLIBuildHelper`** — wraps `ModBuilder.BuildMod` for `unity -batchmode -executeMethod`. Own asmdef (`unity/FasterTalents/Editor/FasterTalents.Editor.asmdef`) because editor-only types cannot be referenced from a combined asmdef.
 
 `unity/` is the canonical source — a 1:1 mirror of the SDK's `Assets/` tree holding **every** file the Unity Editor generates for the mod: the `.cs` sources, both `.asmdef` files, the ModBuilderSettings `.asset`, and all `.meta` files (GUID carriers — versioned per Unity convention). The SDK clone's `Assets/FasterTalents` is a **directory symlink** into `unity/FasterTalents/` (created by `utils/link.sh`); because it is a directory symlink, any file the Editor adds later is captured automatically. Edit in `unity/`; the SDK picks up the change on the next refresh.
