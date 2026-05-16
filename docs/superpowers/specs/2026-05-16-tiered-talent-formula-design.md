@@ -124,6 +124,28 @@ The mod's popup patch class is renamed from `TalentPopupEveryRankPatch` to
 `TalentPopupOnGrantPatch` — the old name described the now-disproven "every
 rank" premise. Its doc comment is rewritten accordingly.
 
+### Component 4 — skill-up twinkle audio (`SpawnSkillIncreasePopup`)
+
+Added as a follow-up after code review of Component 3. Vanilla's
+`SaveSkillsSystem.OnUpdate` calls `PlayerController.SpawnSkillIncreasePopup`
+once per level-up event with `playAudio = (newLevel % 5 != 0)` — it mutes the
+per-level "twinkle" SFX on every 5th level because the vanilla talent bell
+plays there instead. Component 3 moved the bell onto the formula's grant
+levels, which left the every-5th levels that are not grant levels
+(5, 10, 20, 25, 35, 40, 50, 55, 65, 75, 85, 95) with the twinkle muted and no
+bell — a silent level-up.
+
+**Patch C — `SkillIncreaseAudioPatch`, a `Prefix` on `SpawnSkillIncreasePopup`**
+— recomputes the `playAudio` argument (by `ref`) as `!GrantsPointAtLevel(level)`:
+the twinkle plays on exactly the levels where the bell does not. One sound per
+level-up — never none, never both. Like vanilla's own flag, the decision uses
+only the new level, so a rare multi-level jump may briefly play both sounds — a
+harmless cosmetic edge case.
+
+`GrantsPointAtLevel(level)` is added to `ModConfig` (`level > 0 &&
+TalentPointsAtLevel(level) > TalentPointsAtLevel(level - 1)`) so the grant-level
+predicate stays derived from the one shared formula.
+
 ## Documentation updates
 
 `ranksPerTalentPoint` is referenced in: `ModConfig.cs` doc comment, both patch

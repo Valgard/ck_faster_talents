@@ -7,9 +7,9 @@ namespace FasterTalents
     /// Mod bootstrap. The Pugstorm mod loader instantiates this class on
     /// game start and calls the IMod lifecycle methods. The Harmony patch
     /// classes are auto-discovered by the loader — there is no PatchAll()
-    /// call. Neither patch target is Burst-compiled (SaveManager is a plain
-    /// managed class, PlayerController is a MonoBehaviour), so unlike the
-    /// sibling durability mod no BurstDisabler call is needed.
+    /// call. None of the patch targets are Burst-compiled (SaveManager is a
+    /// plain managed class, PlayerController is a MonoBehaviour), so unlike
+    /// the sibling durability mod no BurstDisabler call is needed.
     /// </summary>
     public sealed class FasterTalentsMod : IMod
     {
