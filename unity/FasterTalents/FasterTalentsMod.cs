@@ -21,7 +21,9 @@ namespace FasterTalents
         {
             Debug.Log(
                 $"[FasterTalents] Mod initialized. enabled={ModConfig.Instance.enabled}, " +
-                $"ranksPerTalentPoint={ModConfig.Instance.ranksPerTalentPoint}, " +
+                $"tier1MaxLevel={ModConfig.Instance.tier1MaxLevel}, " +
+                $"tier1RanksPerPoint={ModConfig.Instance.tier1RanksPerPoint}, " +
+                $"tier2RanksPerPoint={ModConfig.Instance.tier2RanksPerPoint}, " +
                 $"maxSkillBonusPoints={ModConfig.Instance.maxSkillBonusPoints}");
         }
 
