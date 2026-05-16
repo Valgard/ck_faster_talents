@@ -24,15 +24,9 @@ namespace FasterTalents
     /// vanilla's every-5th-level popup. SaveManager and PlayerController are
     /// plain managed types, so no Burst handling is required.
     ///
-    /// Scope: only the talent-point popup is retimed. Vanilla's separate
-    /// per-level skill-up indicator — SpawnSkillIncreasePopup, the floating
-    /// text and twinkle SFX — is deliberately left unpatched, so it keeps
-    /// its vanilla cadence, including the playAudio flag that OnUpdate still
-    /// computes as (newLevel % 5 == 0). One consequence: on the every-5th
-    /// levels that are not grant levels (5, 10, 20, 25, 35, 40, 50, 55) the
-    /// twinkle SFX stays suppressed yet no talent bell fires, so those
-    /// level-ups are silent. Retiming that audio would require patching
-    /// SpawnSkillIncreasePopup as well — out of this patch's scope.
+    /// The companion SkillIncreaseAudioPatch (Patch C) re-times the
+    /// per-level skill-up twinkle SFX to match: the twinkle plays on
+    /// exactly the levels where this patch does not fire the bell.
     /// </summary>
     [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.SetSkillValue))]
     internal static class TalentPopupOnGrantPatch
@@ -89,6 +83,35 @@ namespace FasterTalents
         {
             if (!ModConfig.Instance.enabled) return true;   // run original
             return TalentPopupOnGrantPatch.firingOwnPopup;  // false => skip original
+        }
+    }
+
+    /// <summary>
+    /// Patch C. Re-times the per-level skill-up twinkle SFX to the two-tier
+    /// formula. Vanilla's SaveSkillsSystem.OnUpdate calls
+    /// SpawnSkillIncreasePopup with playAudio = (newLevel % 5 != 0): it mutes
+    /// the twinkle on every 5th level because the vanilla talent bell plays
+    /// there instead. TalentPopupOnGrantPatch moved the bell onto the
+    /// formula's grant levels, so without this patch the every-5th levels
+    /// that are not grant levels (5, 10, 20, 25, 35, 40, 50, 55, 65, 75, 85,
+    /// 95) would lose
+    /// the twinkle yet gain no bell — a silent level-up. This prefix
+    /// recomputes playAudio as "not a grant level", so the twinkle plays on
+    /// exactly the levels where no bell fires. Like vanilla's own flag, the
+    /// decision uses only the new level, so a rare multi-level jump may play
+    /// both sounds — a harmless cosmetic edge case.
+    /// </summary>
+    [HarmonyPatch(typeof(PlayerController), nameof(PlayerController.SpawnSkillIncreasePopup))]
+    internal static class SkillIncreaseAudioPatch
+    {
+        [HarmonyPrefix]
+        private static void Prefix(SkillID skillID, ref bool playAudio)
+        {
+            if (!ModConfig.Instance.enabled) return;
+
+            int level = SkillExtensions.GetLevelFromSkill(
+                skillID, Manager.saves.GetSkillValue(skillID));
+            playAudio = !ModConfig.Instance.GrantsPointAtLevel(level);
         }
     }
 }

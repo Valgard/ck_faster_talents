@@ -52,5 +52,17 @@ namespace FasterTalents
             return tier1MaxLevel / tier1RanksPerPoint
                  + (level - tier1MaxLevel) / tier2RanksPerPoint;
         }
+
+        /// <summary>
+        /// True when <paramref name="level"/> is a level at which the
+        /// two-tier formula grants a new talent point — the running total
+        /// steps up from the previous level. Derived from TalentPointsAtLevel
+        /// so the grant levels and the totals stay in lockstep.
+        /// </summary>
+        public bool GrantsPointAtLevel(int level)
+        {
+            return level > 0
+                && TalentPointsAtLevel(level) > TalentPointsAtLevel(level - 1);
+        }
     }
 }
