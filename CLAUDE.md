@@ -40,6 +40,24 @@ Patch targets were identified by decompiling the SDK's bundled game DLLs (`Pug.O
 
 The mod is deployed through the fake-mod.io workaround (see parent `../CLAUDE.md`). This mod's fake mod.io ID is **`9999998`** (the sibling `disable-durability` uses `9999999` — they must differ). Do not open the in-game Mods menu while installed; re-run `../utils/build.sh` to restore if the cache is wiped.
 
+## Publishing to mod.io
+
+`../utils/upload.sh` publishes this mod. It runs the Editor class
+`FasterTalents.Editor.CLIPublishHelper.Publish` (alongside
+`CLIBuildHelper`) via Unity batchmode.
+
+- `Editor/FasterTalents.Editor.asmdef` references the mod.io plugin DLL
+  via `overrideReferences: true` + `precompiledReferences:
+  ["modio.UnityPlugin.dll"]`.
+- The published version comes from the topmost `## [x.y.z]` entry of
+  `CHANGELOG.md`; bump it before publishing.
+- The profile logo is `unity/FasterTalents/Editor/logo.png` (readable,
+  uncompressed; min 512×288).
+- The real mod ID lives in
+  `unity/FasterTalents/Editor/FasterTalents_modio.asset`.
+- One-time: log in via the SDK window's "Log in" tab before the first
+  publish.
+
 ## Conventions
 
 - Commit messages: short imperative subject, no emoji, body wrapped ~75 chars.
