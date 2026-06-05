@@ -21,14 +21,14 @@ No automated tests — verification is a manual in-game check: gain skill levels
 
 ## Architecture
 
-Six runtime classes plus one editor helper, all in the `FasterTalents` namespace:
+Six runtime classes in the `FasterTalents` namespace, plus the shared editor helpers symlinked in from `../utils/`:
 
 - **`FasterTalentsMod` (`IMod`)** — bootstrap; logs init. No `BurstDisabler` needed: none of the patch targets are Burst-compiled.
 - **`ModConfig`** — hardcoded constants `enabled`, `tier1MaxLevel` (60), `tier1RanksPerPoint` (3), `tier2RanksPerPoint` (2), `maxSkillBonusPoints` (0), plus `TalentPointsAtLevel(level)` and `GrantsPointAtLevel(level)` — the shared two-tier formula and its grant-level predicate. No runtime config file — the RoslynCSharp sandbox blocks `System.IO`.
 - **`TalentPointFormulaPatch`** — `Prefix` replacing `SaveManager.GetAvailableTalentPoints`; returns `ModConfig.TalentPointsAtLevel(level)` plus the re-gated max-rank bonus (0 by default).
 - **`TalentPopupOnGrantPatch`** — `Prefix`+`Postfix` on `SaveManager.SetSkillValue`; uses Harmony `__state` to compare the talent total before and after the change and fires `SpawnNewSkillPopup` once when a grant level is crossed. The companion **`SpawnNewSkillPopupGate`** (`Prefix` on `PlayerController.SpawnNewSkillPopup`) suppresses vanilla's every-5th-level popup so the popup has one formula-driven source.
 - **`SkillIncreaseAudioPatch`** — `Prefix` on `PlayerController.SpawnSkillIncreasePopup`; recomputes the `playAudio` flag to `!GrantsPointAtLevel(level)`, so the per-level skill-up twinkle SFX plays on exactly the levels where `TalentPopupOnGrantPatch` does not fire the bell — no silent level-ups, no double audio.
-- **`Editor/CLIBuildHelper`** — wraps `ModBuilder.BuildMod` for `unity -batchmode -executeMethod`. Own asmdef (`unity/FasterTalents/Editor/FasterTalents.Editor.asmdef`) because editor-only types cannot be referenced from a combined asmdef.
+- **Shared editor helpers** (`../utils/CLIBuildHelper.cs`, `CLIPublishHelper.cs`, `LocalizationGenerator.cs`, namespace `CoreKeeperModUtils`) — `CLIBuildHelper` wraps `ModBuilder.BuildMod` and `CLIPublishHelper` drives the mod.io publish, both for `unity -batchmode -executeMethod`. They are **not** vendored: `utils/link.sh` symlinks them into `unity/FasterTalents/Editor/` when `USE_SHARED_EDITOR_HELPERS=1`, so they compile into the editor-only `FasterTalents.Editor` asmdef (a combined runtime+editor asmdef cannot reference editor-only types). Mod identity comes from `MOD_NAME` in `.envrc`, so one source serves every mod. `LocalizationGenerator` is a no-op here — FasterTalents ships no `localization.yaml`. The `.cs` symlinks and their Unity-generated `.meta` are gitignored (nothing references them by GUID).
 
 `unity/` is the canonical source — a 1:1 mirror of the SDK's `Assets/` tree holding **every** file the Unity Editor generates for the mod: the `.cs` sources, both `.asmdef` files, the ModBuilderSettings `.asset`, and all `.meta` files (GUID carriers — versioned per Unity convention). The SDK clone's `Assets/FasterTalents` is a **directory symlink** into `unity/FasterTalents/` (created by `utils/link.sh`); because it is a directory symlink, any file the Editor adds later is captured automatically. Edit in `unity/`; the SDK picks up the change on the next refresh.
 
@@ -42,9 +42,11 @@ The mod is deployed through the fake-mod.io workaround (see parent `../CLAUDE.md
 
 ## Publishing to mod.io
 
-`../utils/upload.sh` publishes this mod. It runs the Editor class
-`FasterTalents.Editor.CLIPublishHelper.Publish` (alongside
-`CLIBuildHelper`) via Unity batchmode.
+`../utils/upload.sh` publishes this mod. With
+`USE_SHARED_EDITOR_HELPERS=1` it runs the shared Editor class
+`CoreKeeperModUtils.CLIPublishHelper.Publish` (symlinked in from
+`../utils/`, alongside `CLIBuildHelper`) via Unity batchmode. The
+publish reads `MOD_REPO_ROOT` (set in `.envrc`) to locate `CHANGELOG.md`.
 
 - `Editor/FasterTalents.Editor.asmdef` references the mod.io plugin DLL
   via `overrideReferences: true` + `precompiledReferences:
