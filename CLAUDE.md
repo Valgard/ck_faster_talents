@@ -38,7 +38,7 @@ Patch targets were identified by decompiling the SDK's bundled game DLLs (`Pug.O
 
 ## macOS / CrossOver
 
-The mod is deployed through the fake-mod.io workaround (see parent `../CLAUDE.md`). This mod's fake mod.io ID is **`9999998`** (the sibling `disable-durability` uses `9999999` — they must differ). Do not open the in-game Mods menu while installed; re-run `../utils/build.sh` to restore if the cache is wiped.
+The mod is deployed through the fake-mod.io workaround (see parent `../CLAUDE.md`). This mod's fake mod.io ID is **`9999998`** (the siblings `disable-durability` uses `9999999`, `item-checklist` uses `9999997`, `caveling-divining-rod` uses `9999996`, `simple-crafting-pool-extender` uses `9999995` — they must differ). Do not open the in-game Mods menu while installed; re-run `../utils/build.sh` to restore if the cache is wiped.
 
 ## Publishing to mod.io
 

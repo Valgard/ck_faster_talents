@@ -1,4 +1,4 @@
-# Faster Talents — Core Keeper Mod
+# Faster Talents
 
 A small Core Keeper mod that replaces the vanilla talent-point curve with a faster two-tier curve — 40 talent points per maxed skill instead of vanilla's 25. Built on the official Pugstorm `CoreKeeperModSDK`.
 
@@ -58,5 +58,5 @@ visible once you have reviewed it.
 
 ## License
 
-Distribution of the compiled mod must comply with the Pugstorm Mod Tool EULA
-(non-commercial only).
+Personal-use, non-commercial — Pugstorm Core Keeper EULA. Built against the
+official `CoreKeeperModSDK`. Source on GitHub; contributions welcome.
