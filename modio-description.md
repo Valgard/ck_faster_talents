@@ -29,4 +29,8 @@ This mod changes player skill talents only — pet talents are untouched.
 
 **Multiplayer:** install the mod on both the client and the server.
 
-Built with the official Pugstorm Core Keeper Mod SDK.
+---
+
+*Built with the official Pugstorm Core Keeper Mod SDK. Personal-use,
+non-commercial (Core Keeper EULA). Not affiliated with or endorsed by
+Pugstorm.*
