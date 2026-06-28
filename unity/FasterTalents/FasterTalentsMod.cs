@@ -7,9 +7,11 @@ namespace FasterTalents
     /// Mod bootstrap. The Pugstorm mod loader instantiates this class on
     /// game start and calls the IMod lifecycle methods. The Harmony patch
     /// classes are auto-discovered by the loader — there is no PatchAll()
-    /// call. None of the patch targets are Burst-compiled (SaveManager is a
-    /// plain managed class, PlayerController is a MonoBehaviour), so unlike
-    /// the sibling durability mod no BurstDisabler call is needed.
+    /// call. The talent-curve patch targets are not Burst-compiled (SaveManager
+    /// is a plain managed class, PlayerController is a MonoBehaviour). The
+    /// XP-boost patch (SkillXpBoostPatch) is the exception: it targets the
+    /// Burst-compiled AddSkillValueSystem, so Init disables Burst for that one
+    /// system.
     /// </summary>
     public sealed class FasterTalentsMod : IMod
     {
@@ -19,12 +21,14 @@ namespace FasterTalents
 
         public void Init()
         {
+            BurstDisabler.DisableBurstForSystem<AddSkillValueSystem>();
             Debug.Log(
                 $"[FasterTalents] Mod initialized. enabled={ModConfig.Instance.enabled}, " +
                 $"tier1MaxLevel={ModConfig.Instance.tier1MaxLevel}, " +
                 $"tier1RanksPerPoint={ModConfig.Instance.tier1RanksPerPoint}, " +
                 $"tier2RanksPerPoint={ModConfig.Instance.tier2RanksPerPoint}, " +
-                $"maxSkillBonusPoints={ModConfig.Instance.maxSkillBonusPoints}");
+                $"maxSkillBonusPoints={ModConfig.Instance.maxSkillBonusPoints}, " +
+                $"xpMultiplier={ModConfig.Instance.xpMultiplier}");
         }
 
         public void ModObjectLoaded(Object obj)

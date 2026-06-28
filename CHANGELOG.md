@@ -6,6 +6,13 @@ without strict adherence — entries describe what shipped per release, not
 every commit. The topmost `## [x.y.z]` entry is the version `upload.sh`
 publishes.
 
+## [1.2.0]
+
+- Added an XP-gain multiplier (default 3×) applied to every skill, so skill
+  levels — and the talent points they unlock — are reached faster. Set
+  `xpMultiplier` in ModConfig to 1.0 to disable. The talent-point curve is
+  unchanged and each skill's max level is still respected.
+
 ## [1.1.0]
 
 - Replaced the flat one-point-per-rank rate with a two-tier talent-point

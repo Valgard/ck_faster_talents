@@ -34,6 +34,12 @@ namespace FasterTalents
         // is 5; 0 keeps the level-100 total at exactly the formula result.
         public int maxSkillBonusPoints = 0;
 
+        // XP gain multiplier applied to every skill's earned XP. 1.0 = vanilla
+        // (boost off). Float so fractional rates (e.g. 2.5) work; a per-grant
+        // minimum of 1 XP is preserved. SkillXpBoostPatch reads this. The
+        // talent-point curve above is independent and unaffected.
+        public float xpMultiplier = 3f;
+
         private static readonly ModConfig _instance = new ModConfig();
         public static ModConfig Instance => _instance;
 
