@@ -12,6 +12,10 @@ Talents replaces that with a quicker two-tier curve:
 The "New talent point available!" popup and chime fire on every level that
 grants a point, so you always know when you have earned one.
 
+**Faster levelling, too:** the mod also multiplies all skill-XP gain (default
+3×), so your skills — and the talent points they unlock — arrive sooner. A
+separate, independently toggleable effect from the talent curve.
+
 **Retroactive:** the faster rate applies to characters you already have —
 load in and your skills immediately reflect the talent points they would
 have earned under the new curve.

@@ -6,11 +6,13 @@ A small Core Keeper mod that replaces the vanilla talent-point curve with a fast
 
 Each player skill earns talent points as it levels up. Vanilla grants one point every 5 skill levels, plus 5 at the max level — 25 total. This mod uses a two-tier curve: one point every 3 levels up to level 60, then one every 2 levels to level 100 — **exactly 40 points per skill tree**, enough to fully skill one talent tree. The "New talent point available!" popup and bell fire on each level that grants a point.
 
+**Faster levelling, too:** the mod also multiplies all skill-XP gain (default **3×**), so your skills — and the talent points they unlock — arrive sooner. This is a separate effect from the talent-point curve above, toggled independently via `xpMultiplier`; it is server-authoritative, so it applies in single-player and when hosting.
+
 The effect is **retroactive**: an existing character immediately sees the talent points it would have earned under the new rate.
 
 **Caveat — removing the mod:** if you spend the extra points and then remove the mod, the vanilla formula yields fewer earned points than you have placed. The game tolerates this — it simply blocks further spending; already-placed talents stay active.
 
-This mod changes only the player skill talents. Pet talents are untouched.
+This mod affects player skills only — pets are untouched (see the companion **Faster Pet Talents** mod).
 
 ## Requirements
 
@@ -21,7 +23,7 @@ This mod changes only the player skill talents. Pet talents are untouched.
 ## Configuration
 
 There is no runtime `config.json` — Pugstorm's RoslynCSharp sandbox blocks file
-I/O. Configuration lives in five source constants in
+I/O. Configuration lives in six source constants in
 `unity/FasterTalents/ModConfig.cs`; edit them and rebuild to change behavior:
 
 | Constant | Default | Vanilla | Effect |
@@ -31,9 +33,11 @@ I/O. Configuration lives in five source constants in
 | `tier1RanksPerPoint` | `3` | `5` | Skill levels needed per talent point at or below `tier1MaxLevel`. |
 | `tier2RanksPerPoint` | `2` | `5` | Skill levels needed per talent point above `tier1MaxLevel`. |
 | `maxSkillBonusPoints` | `0` | `5` | Extra talent points granted once when a skill reaches its max level (100). |
+| `xpMultiplier` | `3.0` | `1.0` | XP-gain multiplier applied to every skill's earned XP. `1.0` = vanilla speed (boost off). Float, so fractional rates like `2.5` work; a per-grant minimum of 1 XP is preserved. |
 
 Setting `tier1RanksPerPoint` and `tier2RanksPerPoint` both to `5` and
-`maxSkillBonusPoints` to `5` restores the vanilla curve.
+`maxSkillBonusPoints` to `5` restores the vanilla curve; `xpMultiplier = 1.0`
+disables the XP boost.
 
 ## Build (developer)
 
