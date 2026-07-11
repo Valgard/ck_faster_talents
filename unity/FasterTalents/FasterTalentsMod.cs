@@ -1,3 +1,4 @@
+using ModSettingsMenu.Settings;
 using PugMod;
 using UnityEngine;
 
@@ -22,6 +23,14 @@ namespace FasterTalents
         public void Init()
         {
             BurstDisabler.DisableBurstForSystem<AddSkillValueSystem>();
+
+            // Binding spike: prove a separate mod can register with the framework. Behavior is
+            // wired through ModConfig in a later step; here the toggle just proves the section
+            // appears + persists.
+            ModSettings.Section(this)
+                .Toggle(out _, "enabled", true)
+                .Build();
+
             Debug.Log(
                 $"[FasterTalents] Mod initialized. enabled={ModConfig.Instance.enabled}, " +
                 $"tier1MaxLevel={ModConfig.Instance.tier1MaxLevel}, " +
