@@ -24,12 +24,13 @@ namespace FasterTalents
         {
             BurstDisabler.DisableBurstForSystem<AddSkillValueSystem>();
 
-            // Binding spike: prove a separate mod can register with the framework. Behavior is
-            // wired through ModConfig in a later step; here the toggle just proves the section
-            // appears + persists.
+            // Register faster-talents' settings; ModConfig reads these live handles (patches unchanged).
             ModSettings.Section(this)
-                .Toggle(out _, "enabled", true)
+                .Hint("Talent + XP tuning")
+                .Choice(out var xp, "xpMultiplier", new[] { 1, 2, 3, 5, 10, 20, 50 }, 3)
+                .Toggle(out var en, "enabled", true)
                 .Build();
+            ModConfig.Instance.Bind(en, xp);
 
             Debug.Log(
                 $"[FasterTalents] Mod initialized. enabled={ModConfig.Instance.enabled}, " +
