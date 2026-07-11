@@ -18,9 +18,9 @@
 
 FasterTalents-Config:
   _hint:
-    hint: "Section hint shown under the Faster Talents heading."
-    en: "Talent + XP tuning"
-    de: "Talent- + XP-Feineinstellung"
+    hint: "Section hint shown under the Faster Talents heading; mirrors the mod.io summary."
+    en: "A faster talent-point curve plus a skill-XP boost - fill your talent trees sooner."
+    de: "Eine schnellere Talentpunkt-Kurve plus Skill-XP-Boost - fülle deine Talentbäume schneller."
   enabled:
     hint: "Master on/off toggle label."
     en: "Enabled"

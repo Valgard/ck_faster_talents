@@ -54,13 +54,13 @@ MonoBehaviour:
         m_address:
           m_low: 681352171529052915
           m_high: 2314507893210082619
-      title: 'Talent + XP tuning'
+      title: 'A faster talent-point curve plus a skill-XP boost - fill your talent trees sooner.'
       description: 
     - m_language:
         m_address:
           m_low: 5554070574462901973
           m_high: -3923471906115629047
-      title: 'Talent- + XP-Feineinstellung'
+      title: 'Eine schnellere Talentpunkt-Kurve plus Skill-XP-Boost - fülle deine Talentbäume schneller.'
       description: 
     - m_language:
         m_address:
@@ -128,13 +128,13 @@ MonoBehaviour:
           m_high: 4238944138262099067
       title: 
       description: 
-  m_localizationHint: 'Section hint shown under the Faster Talents heading.'
+  m_localizationHint: 'Section hint shown under the Faster Talents heading; mirrors the mod.io summary.'
   m_prevImportPrimaryEntry:
     m_language:
       m_address:
         m_low: 681352171529052915
         m_high: 2314507893210082619
-    title: 'Talent + XP tuning'
+    title: 'A faster talent-point curve plus a skill-XP boost - fill your talent trees sooner.'
     description: 
   m_shouldBeLocalized: 1
   m_header: FasterTalents-Config
