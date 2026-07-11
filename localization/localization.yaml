@@ -1,0 +1,41 @@
+# FasterTalents localisation source. Parsed at build by utils/LocalizationGenerator.cs into native
+# Core Keeper TextDataBlock assets under unity/FasterTalents/Localization/Generated/.
+#
+# ASCII rule (enforced by the generator): no U+2026 ellipsis and no U+2014 em-dash; German umlauts
+# (ae oe ue written as the real umlaut chars) are fine.
+#
+# Term convention. The game's loc bridge (ScriptableData) keys every TextDataBlock by
+# `header + "/" + name`, so the loc term is EXACTLY the YAML `<namespace>/<leaf>`. Mod Settings Menu
+# looks up:
+#   - each SETTING label by   <ModId>-Config/<key>     -> here: FasterTalents-Config/enabled, .../xpMultiplier
+#   - the section HINT by      <ModId>-Config/_hint
+#   - each CHOICE OPTION by    <SettingTerm>/<token>    -> here: FasterTalents-Config/xpMultiplier/<n>
+# Because the term is header/name and a leaf becomes an asset FILENAME, the option tokens cannot be
+# leaves "xpMultiplier/1" (a '/' is a path separator). Instead they live as slash-free leaves under
+# their own header "FasterTalents-Config/xpMultiplier": header + "/" + "1" reproduces the exact term
+# the widget resolves, with a clean filename (1.asset). (hint: is a translator note; it is only
+# honoured on multi-line terms, never inside an inline { } map.)
+
+FasterTalents-Config:
+  _hint:
+    hint: "Section hint shown under the Faster Talents heading."
+    en: "Talent + XP tuning"
+    de: "Talent- + XP-Feineinstellung"
+  enabled:
+    hint: "Master on/off toggle label."
+    en: "Enabled"
+    de: "Aktiviert"
+  xpMultiplier:
+    hint: "Skill-XP multiplier setting label."
+    en: "XP multiplier"
+    de: "XP-Multiplikator"
+
+# Choice option labels for xpMultiplier. Leaf = the int token the Choice widget stores (value.ToString()).
+FasterTalents-Config/xpMultiplier:
+  1: { en: "off", de: "aus" }
+  2: { en: "2x", de: "2x" }
+  3: { en: "3x", de: "3x" }
+  5: { en: "5x", de: "5x" }
+  10: { en: "10x", de: "10x" }
+  20: { en: "20x", de: "20x" }
+  50: { en: "50x", de: "50x" }
