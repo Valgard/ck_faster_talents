@@ -6,6 +6,13 @@ without strict adherence — entries describe what shipped per release, not
 every commit. The topmost `## [x.y.z]` entry is the version `upload.sh`
 publishes.
 
+## [1.3.0]
+
+- **In-game settings** under Options -> Mod Settings (via the Mod Settings Menu
+  framework): switch the whole mod on/off and pick the skill-XP multiplier
+  (off, 2x, 3x, 5x, 10x, 20x, 50x) live.
+- Now requires the **Mod Settings Menu** mod and CoreLib, which host the settings.
+
 ## [1.2.0]
 
 - Added an XP-gain multiplier (default 3×) applied to every skill, so skill

@@ -25,7 +25,14 @@ vanilla's formula grants fewer points than you have placed. The game handles
 this gracefully — it simply blocks further spending; talents you have
 already placed stay active.
 
+**Configurable in-game:** open **Options → Mod Settings** to switch the whole mod
+on or off and pick the skill-XP multiplier (off, 2×, 3×, 5×, 10×, 20×, 50×) —
+no config files.
+
 This mod changes player skill talents only — pet talents are untouched.
+
+**Requirements:** CoreLib and Mod Settings Menu — mod.io will prompt you to install
+both when you subscribe.
 
 **Multiplayer:** install the mod on both the client and the server.
 
