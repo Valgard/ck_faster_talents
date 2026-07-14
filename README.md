@@ -12,53 +12,40 @@ The effect is **retroactive**: an existing character immediately sees the talent
 
 **Caveat — removing the mod:** if you spend the extra points and then remove the mod, the vanilla formula yields fewer earned points than you have placed. The game tolerates this — it simply blocks further spending; already-placed talents stay active.
 
-This mod affects player skills only — pets are untouched (see the companion **Faster Pet Talents** mod).
+This mod affects player skills only — pets are untouched.
 
 ## Requirements
 
 - Core Keeper (Steam, PC build)
-- Pugstorm `CoreKeeperModSDK` toolchain to build (developer-side only)
+- **CoreLib** and **Mod Settings Menu** — mod.io prompts you to install both
+  when you subscribe; they host the in-game settings.
 - For multiplayer: install on both client and server.
 
 ## Configuration
 
-There is no runtime `config.json` — Pugstorm's RoslynCSharp sandbox blocks file
-I/O. Configuration lives in six source constants in
-`unity/FasterTalents/ModConfig.cs`; edit them and rebuild to change behavior:
+Two settings are live in-game — no config files, no rebuild. Open **Options →
+Mod Settings**:
+
+- **Enabled** — master switch. When off, every patch falls through and the game
+  behaves exactly as vanilla.
+- **Skill-XP multiplier** — off, 2×, **3×** (default), 5×, 10×, 20×, or 50×,
+  applied to every skill's earned XP. "Off" is vanilla speed, independent of the
+  talent-point curve; a per-grant minimum of 1 XP is preserved.
+
+The talent-point curve itself is fixed by four constants in a `ModConfig.cs`
+source file. Changing the curve shape means editing those and rebuilding —
+Pugstorm's RoslynCSharp sandbox blocks a runtime `config.json`, so there is no
+file to edit at play time:
 
 | Constant | Default | Vanilla | Effect |
 |----------|---------|---------|--------|
-| `enabled` | `true` | — | Master switch. When `false`, all patches fall through and the game behaves exactly as vanilla. |
 | `tier1MaxLevel` | `60` | — | Last skill level covered by the tier-1 rate. |
 | `tier1RanksPerPoint` | `3` | `5` | Skill levels needed per talent point at or below `tier1MaxLevel`. |
 | `tier2RanksPerPoint` | `2` | `5` | Skill levels needed per talent point above `tier1MaxLevel`. |
 | `maxSkillBonusPoints` | `0` | `5` | Extra talent points granted once when a skill reaches its max level (100). |
-| `xpMultiplier` | `3.0` | `1.0` | XP-gain multiplier applied to every skill's earned XP. `1.0` = vanilla speed (boost off). Float, so fractional rates like `2.5` work; a per-grant minimum of 1 XP is preserved. |
 
 Setting `tier1RanksPerPoint` and `tier2RanksPerPoint` both to `5` and
-`maxSkillBonusPoints` to `5` restores the vanilla curve; `xpMultiplier = 1.0`
-disables the XP boost.
-
-## Build (developer)
-
-See `CLAUDE.md` for the build and deploy procedure.
-
-## Publishing
-
-Publish a new version to mod.io:
-
-1. Bump the topmost `## [x.y.z]` entry in `CHANGELOG.md`.
-2. One-time only: open the Pugstorm Mod SDK window in Unity and log in via
-   the "Log in" tab.
-3. Close the Unity Editor, then run:
-
-   ```bash
-   source .envrc
-   ../utils/upload.sh            # or: ../utils/upload.sh --dry-run
-   ```
-
-A newly created mod.io profile is hidden — open its profile page and set it
-visible once you have reviewed it.
+`maxSkillBonusPoints` to `5` restores the vanilla curve.
 
 ## License
 
