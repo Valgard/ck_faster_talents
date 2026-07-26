@@ -32,7 +32,8 @@ namespace FasterTalents
         private static void Prefix(ref SystemState state)
         {
             float mult = ModConfig.Instance.xpMultiplier;
-            if (mult == 1f) return;   // boost off — leave amounts untouched
+            if (mult == 1f)
+                return; // boost off — leave amounts untouched
 
             EntityManager em = state.EntityManager;
             EntityQuery query = state.GetEntityQuery(ComponentType.ReadWrite<AddSkillValueCD>());
@@ -41,7 +42,8 @@ namespace FasterTalents
             {
                 AddSkillValueCD cd = em.GetComponentData<AddSkillValueCD>(entities[i]);
                 int boosted = (int)(cd.amount * mult + 0.5f);
-                if (boosted < 1) boosted = 1;
+                if (boosted < 1)
+                    boosted = 1;
                 cd.amount = boosted;
                 em.SetComponentData(entities[i], cd);
             }

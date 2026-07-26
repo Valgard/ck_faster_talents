@@ -70,8 +70,7 @@ namespace FasterTalents
             if (level <= tier1MaxLevel)
                 return level / tier1RanksPerPoint;
 
-            return tier1MaxLevel / tier1RanksPerPoint
-                 + (level - tier1MaxLevel) / tier2RanksPerPoint;
+            return tier1MaxLevel / tier1RanksPerPoint + (level - tier1MaxLevel) / tier2RanksPerPoint;
         }
 
         /// <summary>
@@ -82,8 +81,7 @@ namespace FasterTalents
         /// </summary>
         public bool GrantsPointAtLevel(int level)
         {
-            return level > 0
-                && TalentPointsAtLevel(level) > TalentPointsAtLevel(level - 1);
+            return level > 0 && TalentPointsAtLevel(level) > TalentPointsAtLevel(level - 1);
         }
     }
 }

@@ -34,7 +34,8 @@ namespace FasterTalents
         // Set only while this patch calls SpawnNewSkillPopup itself, so the
         // SpawnNewSkillPopupGate prefix can tell our call from vanilla's.
         // ThreadStatic guards against any off-main-thread skill writes.
-        [ThreadStatic] internal static bool firingOwnPopup;
+        [ThreadStatic]
+        internal static bool firingOwnPopup;
 
         static TalentPopupOnGrantPatch()
         {
@@ -52,20 +53,28 @@ namespace FasterTalents
         [HarmonyPostfix]
         private static void Postfix(SkillID skillId, int value, int __state)
         {
-            if (!ModConfig.Instance.enabled) return;
+            if (!ModConfig.Instance.enabled)
+                return;
 
             int newLevel = SkillExtensions.GetLevelFromSkill(skillId, value);
-            int gained = ModConfig.Instance.TalentPointsAtLevel(newLevel)
-                       - ModConfig.Instance.TalentPointsAtLevel(__state);
-            if (gained <= 0) return;
+            int gained = ModConfig.Instance.TalentPointsAtLevel(newLevel) - ModConfig.Instance.TalentPointsAtLevel(__state);
+            if (gained <= 0)
+                return;
 
             // Same guard SaveSkillsSystem.OnUpdate uses to keep popups from
             // firing while a save is still loading (no player yet).
-            if (Manager.main == null || Manager.main.player == null) return;
+            if (Manager.main == null || Manager.main.player == null)
+                return;
 
             firingOwnPopup = true;
-            try { Manager.main.player.SpawnNewSkillPopup(skillId); }
-            finally { firingOwnPopup = false; }
+            try
+            {
+                Manager.main.player.SpawnNewSkillPopup(skillId);
+            }
+            finally
+            {
+                firingOwnPopup = false;
+            }
         }
     }
 
@@ -81,8 +90,9 @@ namespace FasterTalents
         [HarmonyPrefix]
         private static bool Prefix()
         {
-            if (!ModConfig.Instance.enabled) return true;   // run original
-            return TalentPopupOnGrantPatch.firingOwnPopup;  // false => skip original
+            if (!ModConfig.Instance.enabled)
+                return true; // run original
+            return TalentPopupOnGrantPatch.firingOwnPopup; // false => skip original
         }
     }
 
@@ -107,10 +117,10 @@ namespace FasterTalents
         [HarmonyPrefix]
         private static void Prefix(SkillID skillID, ref bool playAudio)
         {
-            if (!ModConfig.Instance.enabled) return;
+            if (!ModConfig.Instance.enabled)
+                return;
 
-            int level = SkillExtensions.GetLevelFromSkill(
-                skillID, Manager.saves.GetSkillValue(skillID));
+            int level = SkillExtensions.GetLevelFromSkill(skillID, Manager.saves.GetSkillValue(skillID));
             playAudio = !ModConfig.Instance.GrantsPointAtLevel(level);
         }
     }

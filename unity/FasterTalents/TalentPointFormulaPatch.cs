@@ -24,7 +24,8 @@ namespace FasterTalents
         [HarmonyPrefix]
         private static bool Prefix(SkillID skillTreeID, ref int __result)
         {
-            if (!ModConfig.Instance.enabled) return true;   // run original
+            if (!ModConfig.Instance.enabled)
+                return true; // run original
 
             int skillValue = Manager.saves.GetSkillValue(skillTreeID);
             int level = SkillExtensions.GetLevelFromSkill(skillTreeID, skillValue);
@@ -42,7 +43,7 @@ namespace FasterTalents
             }
 
             __result = earned - spent;
-            return false;   // skip original
+            return false; // skip original
         }
     }
 }
