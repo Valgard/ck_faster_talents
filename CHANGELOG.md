@@ -5,6 +5,16 @@ loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 without strict adherence — entries describe what shipped per release, not
 every commit. The topmost `## [x.y.z]` entry is the current published version.
 
+## [1.3.1]
+
+### Fixed
+
+- **The skill-XP boost did nothing on a dedicated server.** The talent-point
+  curve and the popups worked, but XP came in at the normal rate: the boost
+  never became active on the server side, and that is where skill XP is
+  awarded. Single-player and hosting were unaffected. Update the mod on the
+  server as well — the fix has to run there.
+
 ## [1.3.0]
 
 - **In-game settings** under Options -> Mod Settings (via the Mod Settings Menu
