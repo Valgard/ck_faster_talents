@@ -24,7 +24,7 @@ This mod affects player skills only — pets are untouched.
 ## Configuration
 
 Two settings are live in-game — no config files, no rebuild. Open **Options →
-Mod Settings**:
+Mod settings**:
 
 - **Enabled** — master switch. When off, every patch falls through and the game
   behaves exactly as vanilla.

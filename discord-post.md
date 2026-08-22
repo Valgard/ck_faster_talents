@@ -19,7 +19,7 @@ Player skills only — pet talents are untouched, Faster Pet Talents does those.
 
 ## Settings
 
-**Options → Mod Settings** — on/off, plus the XP multiplier (off, 2×, 3×, 5×,
+**Options → Mod settings** — on/off, plus the XP multiplier (off, 2×, 3×, 5×,
 10×, 20×, 50×).
 
 ## Requirements
