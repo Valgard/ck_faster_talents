@@ -52,6 +52,10 @@ export CK_MODIO_TYPE="Overhaul|Quality of Life"
 # spaces. Read by utils/discord_post.py; Discord allows at most five.
 export CK_DISCORD_TAGS="Tweaks|Difficulty"
 
+# This mod's existing thread in #available-mods. Empty means no thread yet, so
+# a new post is created; set means a new version is announced as a comment.
+export CK_DISCORD_THREAD="https://discord.com/channels/851842678340845600/1083718088526139443/threads/1542238386922848408"
+
 # Images and clips for the post, beyond the logo — PIPE-separated, in the order
 # they should appear. A relative path becomes an attachment, an http(s) URL
 # becomes its own follow-up message (the only route for a clip past Discord's
