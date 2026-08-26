@@ -1,0 +1,28 @@
+[h1]Faster Talents[/h1]
+
+In vanilla Core Keeper, each skill earns one talent point every 5 levels, plus a handful more at the maximum level — 25 points total for a fully maxed skill. Faster Talents replaces that with a quicker two-tier curve: one point every 3 levels up to level 60, then one every 2 levels from 60 to 100 — 40 points per skill, enough to completely fill one talent tree.
+
+[b]Two separate effects, both toggleable.[/b] Faster Talents also multiplies skill-XP gain (3x by default), so your skills — and the talent points they unlock — arrive sooner. This is independent from the talent-point curve above; turn either one off in the settings without touching the other.
+
+The new curve applies retroactively to characters you already have — load in and your skills immediately reflect the talent points they would have earned under it. If you later uninstall the mod, vanilla's formula grants fewer points than you may have already spent; the game handles this gracefully by simply blocking further spending, while talents you already placed stay active.
+
+[b]Player skills only.[/b] This mod affects skill talents, not pet talents — pets keep their vanilla talent curve.
+
+[b]Multiplayer:[/b] install the mod on both the client and the server.
+
+[h2]Settings[/h2]
+
+Open Options → Mod settings to switch the whole mod on or off and pick the skill-XP multiplier (off, 2x, 3x, 5x, 10x, 20x, 50x) — no config files.
+
+[h2]Requirements[/h2]
+
+[list]
+[*] Mod Settings Menu (required) — hosts the in-game settings screen
+[*] CoreLib (required) — a dependency of Mod Settings Menu
+[/list]
+
+Steam does not prompt for required items the way mod.io does — subscribe to Mod Settings Menu and CoreLib as well, or the mod will not load.
+
+[hr][/hr]
+
+Built with the official Pugstorm Core Keeper Mod SDK. Personal-use, non-commercial (Core Keeper EULA). Not affiliated with or endorsed by Pugstorm.
