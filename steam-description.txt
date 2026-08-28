@@ -14,15 +14,6 @@ The new curve applies retroactively to characters you already have — load in a
 
 Open Options → Mod settings to switch the whole mod on or off and pick the skill-XP multiplier (off, 2x, 3x, 5x, 10x, 20x, 50x) — no config files.
 
-[h2]Requirements[/h2]
-
-[list]
-[*] Mod Settings Menu (required) — hosts the in-game settings screen
-[*] CoreLib (required) — a dependency of Mod Settings Menu
-[/list]
-
-Steam does not prompt for required items the way mod.io does — subscribe to Mod Settings Menu and CoreLib as well, or the mod will not load.
-
 [hr][/hr]
 
 Built with the official Pugstorm Core Keeper Mod SDK. Personal-use, non-commercial (Core Keeper EULA). Not affiliated with or endorsed by Pugstorm.
