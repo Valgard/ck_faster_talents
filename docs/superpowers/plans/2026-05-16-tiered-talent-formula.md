@@ -2,13 +2,25 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the mod's linear talent-point formula with a two-tier curve — one point per 3 skill levels up to level 60, then one per 2 levels to 100 (exactly 40 points per skill tree) — and make the talent-point popup fire on exactly those grant levels.
+**Goal:** Replace the mod's linear talent-point formula with a two-tier curve —
+one point per 3 skill levels up to level 60, then one per 2 levels to 100
+(exactly 40 points per skill tree) — and make the talent-point popup fire on
+exactly those grant levels.
 
-**Architecture:** Three Harmony patches against `CoreKeeperModSDK` game DLLs. `ModConfig.TalentPointsAtLevel` is the single shared formula. Patch A (`SaveManager.GetAvailableTalentPoints`) returns the running total. Patch B hooks `SaveManager.SetSkillValue` (prefix+postfix, Harmony `__state` carries the old level) and fires `SpawnNewSkillPopup` when a change crosses a grant level; a gate prefix on `SpawnNewSkillPopup` suppresses vanilla's every-5th-level popup.
+**Architecture:** Three Harmony patches against `CoreKeeperModSDK` game DLLs.
+`ModConfig.TalentPointsAtLevel` is the single shared formula. Patch A
+(`SaveManager.GetAvailableTalentPoints`) returns the running total. Patch B
+hooks `SaveManager.SetSkillValue` (prefix+postfix, Harmony `__state` carries the
+old level) and fires `SpawnNewSkillPopup` when a change crosses a grant level; a
+gate prefix on `SpawnNewSkillPopup` suppresses vanilla's every-5th-level popup.
 
-**Tech Stack:** C# (Unity 6000.0.59f2), HarmonyLib, Pugstorm `CoreKeeperModSDK`. Build via `unity -batchmode`. No automated test framework — verification is a Unity batchmode compile plus a manual in-game check.
+**Tech Stack:** C# (Unity 6000.0.59f2), HarmonyLib, Pugstorm `CoreKeeperModSDK`.
+Build via `unity -batchmode`. No automated test framework — verification is a
+Unity batchmode compile plus a manual in-game check.
 
-**Execution note:** Per the repo convention (`../CLAUDE.md`), do this work in a dedicated git worktree under `REPO_ROOT/.worktrees/`. The `superpowers:using-git-worktrees` skill handles creation at execution start.
+**Execution note:** Per the repo convention (`../CLAUDE.md`), do this work in a
+dedicated git worktree under `REPO_ROOT/.worktrees/`. The
+`superpowers:using-git-worktrees` skill handles creation at execution start.
 
 **Spec:** `docs/superpowers/specs/2026-05-16-tiered-talent-formula-design.md`
 
@@ -25,7 +37,8 @@
 | `CLAUDE.md` | Modify | Architecture docs name `ranksPerTalentPoint` / old class. |
 | `README.md` | Modify | Intro, "What it does", config table. |
 
-`.meta` files are GUID carriers (versioned). Renaming a `.cs` requires renaming its `.cs.meta` alongside it so the GUID is preserved.
+`.meta` files are GUID carriers (versioned). Renaming a `.cs` requires renaming
+its `.cs.meta` alongside it so the GUID is preserved.
 
 ---
 
@@ -37,7 +50,8 @@ compiling commit.
 **Files:**
 - Modify: `unity/FasterTalents/ModConfig.cs`
 - Modify: `unity/FasterTalents/TalentPointFormulaPatch.cs`
-- Rename: `unity/FasterTalents/TalentPopupEveryRankPatch.cs` → `TalentPopupOnGrantPatch.cs` (+ `.cs.meta`)
+- Rename: `unity/FasterTalents/TalentPopupEveryRankPatch.cs` →
+  `TalentPopupOnGrantPatch.cs` (+ `.cs.meta`)
 - Modify: `unity/FasterTalents/FasterTalentsMod.cs`
 
 - [ ] **Step 1: Rewrite `ModConfig.cs`**
@@ -172,7 +186,8 @@ The `.cs.meta` content (GUID `5263a062e252243f6988796cf7eed024`) is unchanged �
 
 - [ ] **Step 4: Rewrite `TalentPopupOnGrantPatch.cs`**
 
-Replace the entire content of the renamed `unity/FasterTalents/TalentPopupOnGrantPatch.cs` with:
+Replace the entire content of the renamed
+`unity/FasterTalents/TalentPopupOnGrantPatch.cs` with:
 
 ```csharp
 using System;
@@ -515,9 +530,11 @@ afterward.
 - New formula (`TalentPointsAtLevel`, two tiers) → Task 1 Step 1. ✓
 - Max-rank bonus removed (`maxSkillBonusPoints = 0`, field kept) → Task 1 Step 1. ✓
 - Patch A uses the shared formula → Task 1 Step 2. ✓
-- Patch B: `SetSkillValue` prefix+postfix with `__state` + `SpawnNewSkillPopup` gate → Task 1 Steps 3–4. ✓
+- Patch B: `SetSkillValue` prefix+postfix with `__state` + `SpawnNewSkillPopup`
+  gate → Task 1 Steps 3–4. ✓
 - Single shared formula consumed by both patches → `TalentPointsAtLevel`, Task 1. ✓
-- Doc updates (`ModConfig.cs`, patch doc comments, `CLAUDE.md`, `README.md`) → in-file comments in Task 1; `CLAUDE.md`/`README.md` in Task 3. ✓
+- Doc updates (`ModConfig.cs`, patch doc comments, `CLAUDE.md`, `README.md`) →
+  in-file comments in Task 1; `CLAUDE.md`/`README.md` in Task 3. ✓
 - Non-goals (no runtime config, no generic tier list, no linear mode) → respected. ✓
 - Verification (build + manual in-game checks) → Tasks 2 and 4. ✓
 
@@ -525,8 +542,8 @@ afterward.
 exact old/new strings.
 
 **Type consistency:** `ModConfig.TalentPointsAtLevel(int) : int` is defined in
-Task 1 Step 1 and called identically in Steps 2 and 4. `TalentPopupOnGrantPatch.firingOwnPopup`
-is defined in Step 4 and read in the same file by `SpawnNewSkillPopupGate`.
-Harmony `__state` is `out int` in the prefix and `int` in the postfix (Step 4).
-`SetSkillValue` parameter names `skillId` / `value` match the decompiled game
-signature.
+Task 1 Step 1 and called identically in Steps 2 and 4.
+`TalentPopupOnGrantPatch.firingOwnPopup` is defined in Step 4 and read in the
+same file by `SpawnNewSkillPopupGate`. Harmony `__state` is `out int` in the
+prefix and `int` in the postfix (Step 4). `SetSkillValue` parameter names
+`skillId` / `value` match the decompiled game signature.

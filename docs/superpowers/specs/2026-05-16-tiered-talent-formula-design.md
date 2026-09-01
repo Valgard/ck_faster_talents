@@ -103,9 +103,9 @@ Two coordinated patches:
 - **Prefix + Postfix on `SaveManager.SetSkillValue(SkillID, int)`** — the only
   place that decides whether a popup fires. The prefix reads the *old* level
   (`GetSkillValue` is not yet overwritten) into Harmony `__state`; the postfix,
-  after the commit, reads the *new* level and computes
-  `pointsGained = TalentPointsAtLevel(new) − TalentPointsAtLevel(old)` via the
-  shared `ModConfig` formula. If `pointsGained > 0` and `Manager.main?.player` is
+  after the commit, reads the *new* level and computes `pointsGained =
+  TalentPointsAtLevel(new) − TalentPointsAtLevel(old)` via the shared
+  `ModConfig` formula. If `pointsGained > 0` and `Manager.main?.player` is
   non-null, it fires `SpawnNewSkillPopup` once, wrapped in a `[ThreadStatic]`
   reentrancy flag. The `Manager.main.player != null` guard is the same guard
   vanilla's `OnUpdate` uses to suppress popups during save loading.
