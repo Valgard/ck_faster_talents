@@ -5,6 +5,15 @@ loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), witho
 what shipped per release, not every commit. The topmost `## [x.y.z]` entry is
 the current published version.
 
+## [1.4.1]
+
+### Fixed
+
+- **Runs on Core Keeper 1.2 again.** 1.4.0 no longer loaded there: the game
+  compiles a mod when it starts, and 1.4.0's XP boost only compiled against
+  Core Keeper 1.3, where skill XP became fractional. The boost now works on
+  both — exact multiplication on 1.3, whole points as before on 1.2.
+
 ## [1.4.0]
 
 ### Fixed

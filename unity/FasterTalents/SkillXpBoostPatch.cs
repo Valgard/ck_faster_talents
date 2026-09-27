@@ -13,7 +13,8 @@ namespace FasterTalents
     /// created solely by PlayerController.AddSkill. That component is consumed
     /// by the Burst system AddSkillValueSystem, which adds `amount` to a per-skill
     /// fractional accumulator (SkillProgressBuffer, new in 1.3), moves the whole
-    /// part into the skill value and keeps the remainder. Only that transfer
+    /// part into the skill value and keeps the remainder (up to CK 1.2 the amount
+    /// was an int added directly; see Scale below). Only that transfer
     /// sits behind a `level &lt; maxLevel` guard; at max level the whole part is
     /// discarded. The
     /// producers run inside Burst-compiled simulation code, so the only robust
@@ -45,14 +46,30 @@ namespace FasterTalents
             NativeArray<Entity> entities = query.ToEntityArray(Allocator.Temp);
             for (int i = 0; i < entities.Length; i++)
             {
-                // amount is a float, often below 1 (combat grants weaponCooldown * 2.5), and the
-                // system keeps the fractional remainder, so a plain multiply loses nothing.
-                // Rounding here would distort every sub-1 grant.
                 AddSkillValueCD cd = em.GetComponentData<AddSkillValueCD>(entities[i]);
-                cd.amount *= mult;
+                Scale(ref cd.amount, mult);
                 em.SetComponentData(entities[i], cd);
             }
             entities.Dispose();
+        }
+
+        // The mod is compiled at load time against whichever game is installed, and
+        // AddSkillValueCD.amount is an int up to CK 1.2 and a float from 1.3 on. Overload
+        // resolution picks the matching Scale for the field's type, so one source compiles
+        // on both — a direct `cd.amount *= mult` is error CS0266 against the int field.
+
+        // CK 1.2: whole points only, so round, and never let a grant vanish.
+        private static void Scale(ref int amount, float mult)
+        {
+            int boosted = (int)(amount * mult + 0.5f);
+            amount = boosted < 1 ? 1 : boosted;
+        }
+
+        // CK 1.3+: amounts are often below 1 (combat grants weaponCooldown * 2.5) and the
+        // system keeps the fractional remainder, so a plain multiply loses nothing.
+        private static void Scale(ref float amount, float mult)
+        {
+            amount *= mult;
         }
     }
 }

@@ -74,6 +74,9 @@ symlinked in from `../utils/`:
   the original applies it, so a single multiplier scales **all** skills; the system's
   `level < maxLevel` guard is left intact (no-op at max level). Like every other patch
   it returns early when `enabled` is off, so the master switch reverts the XP rate too.
+  `amount` is an `int` up to CK 1.2 and a `float` from 1.3, and the mod is compiled
+  against whichever game is installed, so the multiply goes through two `Scale(ref …)`
+  overloads — rounding for `int`, exact for `float` — and one source loads on both.
   XP grant is server-authoritative, so the boost applies in single-player and as host.
 - **`TalentPopupOnGrantPatch`** — `Prefix`+`Postfix` on `SaveManager.SetSkillValue`;
   uses Harmony `__state` to compare the talent total before and after the change and
