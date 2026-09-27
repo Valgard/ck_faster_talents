@@ -14,6 +14,9 @@ the current published version.
   each boosted grant to a whole point, never below one, so small grants came
   out well above the chosen multiplier. The boost now multiplies the exact
   amount.
+- **The "Enabled" switch now also turns off the XP boost.** Until now it only
+  reverted the talent-point curve, while XP kept coming in at the chosen
+  multiplier. Switched off, the mod now behaves exactly like vanilla.
 
 ## [1.3.1]
 

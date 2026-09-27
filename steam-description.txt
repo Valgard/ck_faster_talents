@@ -2,7 +2,7 @@
 
 In vanilla Core Keeper, each skill earns one talent point every 5 levels, plus a handful more at the maximum level — 25 points total for a fully maxed skill. Faster Talents replaces that with a quicker two-tier curve: one point every 3 levels up to level 60, then one every 2 levels from 60 to 100 — 40 points per skill, enough to completely fill one talent tree.
 
-[b]Two separate effects, both toggleable.[/b] Faster Talents also multiplies skill-XP gain (3x by default), so your skills — and the talent points they unlock — arrive sooner. This is independent from the talent-point curve above; turn either one off in the settings without touching the other.
+[b]Faster levelling, too.[/b] Faster Talents also multiplies skill-XP gain (3x by default), so your skills — and the talent points they unlock — arrive sooner. Set the multiplier to off to keep the new talent curve at vanilla XP speed; the master switch turns off both.
 
 The new curve applies retroactively to characters you already have — load in and your skills immediately reflect the talent points they would have earned under it. If you later uninstall the mod, vanilla's formula grants fewer points than you may have already spent; the game handles this gracefully by simply blocking further spending, while talents you already placed stay active.
 

@@ -34,6 +34,8 @@ namespace FasterTalents
         [HarmonyPrefix]
         private static void Prefix(ref SystemState state)
         {
+            if (!ModConfig.Instance.enabled)
+                return; // master switch off — vanilla XP, like every other patch
             float mult = ModConfig.Instance.xpMultiplier;
             if (mult == 1f)
                 return; // boost off — leave amounts untouched

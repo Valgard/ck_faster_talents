@@ -72,8 +72,9 @@ symlinked in from `../utils/`:
   `PlayerController.AddSkill`, consumed by this system). The prefix queries the pending
   `AddSkillValueCD` and multiplies each `amount` by `ModConfig.xpMultiplier` *before*
   the original applies it, so a single multiplier scales **all** skills; the system's
-  `level < maxLevel` guard is left intact (no-op at max level). XP grant is
-  server-authoritative, so the boost applies in single-player and as host.
+  `level < maxLevel` guard is left intact (no-op at max level). Like every other patch
+  it returns early when `enabled` is off, so the master switch reverts the XP rate too.
+  XP grant is server-authoritative, so the boost applies in single-player and as host.
 - **`TalentPopupOnGrantPatch`** — `Prefix`+`Postfix` on `SaveManager.SetSkillValue`;
   uses Harmony `__state` to compare the talent total before and after the change and
   fires `SpawnNewSkillPopup` once when a grant level is crossed. The companion

@@ -15,8 +15,8 @@ that grants a point.
 
 **Faster levelling, too:** the mod also multiplies all skill-XP gain (default
 **3×**), so your skills — and the talent points they unlock — arrive sooner.
-This is a separate effect from the talent-point curve above, toggled
-independently via `xpMultiplier`; it is server-authoritative, so it applies in
+Set the multiplier to off to keep the new curve at vanilla XP speed; the master
+switch turns off both. It is server-authoritative, so it applies in
 single-player and when hosting.
 
 The effect is **retroactive**: an existing character immediately sees the talent
