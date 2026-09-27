@@ -5,6 +5,16 @@ loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), witho
 what shipped per release, not every commit. The topmost `## [x.y.z]` entry is
 the current published version.
 
+## [1.3.2]
+
+### Fixed
+
+- **Updated for Core Keeper 1.3.** The game now awards skill XP in fractions —
+  a fast weapon earns less than one point per hit — and the XP boost rounded
+  each boosted grant to a whole point, never below one, so small grants came
+  out well above the chosen multiplier. The boost now multiplies the exact
+  amount.
+
 ## [1.3.1]
 
 ### Fixed

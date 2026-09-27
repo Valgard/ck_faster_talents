@@ -11,8 +11,11 @@ namespace FasterTalents
     /// Every skill-XP grant (mining, combat, fishing, crafting, cooking,
     /// gardening, …) funnels through one ECS component, AddSkillValueCD,
     /// created solely by PlayerController.AddSkill. That component is consumed
-    /// by the Burst system AddSkillValueSystem, which does
-    /// `skillBuffer.Value += amount` behind a `level &lt; maxLevel` guard. The
+    /// by the Burst system AddSkillValueSystem, which adds `amount` to a per-skill
+    /// fractional accumulator (SkillProgressBuffer, new in 1.3), moves the whole
+    /// part into the skill value and keeps the remainder. Only that transfer
+    /// sits behind a `level &lt; maxLevel` guard; at max level the whole part is
+    /// discarded. The
     /// producers run inside Burst-compiled simulation code, so the only robust
     /// interception point is the consumer system. FasterTalentsMod.Init disables
     /// Burst for it so this managed Prefix can run; the Prefix inflates the
@@ -40,11 +43,11 @@ namespace FasterTalents
             NativeArray<Entity> entities = query.ToEntityArray(Allocator.Temp);
             for (int i = 0; i < entities.Length; i++)
             {
+                // amount is a float, often below 1 (combat grants weaponCooldown * 2.5), and the
+                // system keeps the fractional remainder, so a plain multiply loses nothing.
+                // Rounding here would distort every sub-1 grant.
                 AddSkillValueCD cd = em.GetComponentData<AddSkillValueCD>(entities[i]);
-                int boosted = (int)(cd.amount * mult + 0.5f);
-                if (boosted < 1)
-                    boosted = 1;
-                cd.amount = boosted;
+                cd.amount *= mult;
                 em.SetComponentData(entities[i], cd);
             }
             entities.Dispose();

@@ -45,7 +45,7 @@ Mod settings**:
   behaves exactly as vanilla.
 - **Skill-XP multiplier** — off, 2×, **3×** (default), 5×, 10×, 20×, or 50×,
   applied to every skill's earned XP. "Off" is vanilla speed, independent of the
-  talent-point curve; a per-grant minimum of 1 XP is preserved.
+  talent-point curve. Fractional grants are multiplied exactly, not rounded.
 
 The talent-point curve itself is fixed by four constants in a `ModConfig.cs`
 source file. Changing the curve shape means editing those and rebuilding —
