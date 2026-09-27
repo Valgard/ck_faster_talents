@@ -5,15 +5,19 @@ loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), witho
 what shipped per release, not every commit. The topmost `## [x.y.z]` entry is
 the current published version.
 
-## [1.3.2]
+## [1.4.0]
 
 ### Fixed
 
 - **Updated for Core Keeper 1.3.** The game now awards skill XP in fractions —
   a fast weapon earns less than one point per hit — and the XP boost rounded
-  each boosted grant to a whole point, never below one, so small grants came
-  out well above the chosen multiplier. The boost now multiplies the exact
-  amount.
+  each boosted grant to a whole point, never below one. Combat XP therefore
+  drifted off the chosen multiplier: far above it for the smallest grants,
+  slightly below it for some others. The boost now multiplies the exact
+  amount, so every skill rises at exactly the chosen rate.
+
+### Changed
+
 - **The "Enabled" switch now also turns off the XP boost.** Until now it only
   reverted the talent-point curve, while XP kept coming in at the chosen
   multiplier. Switched off, the mod now behaves exactly like vanilla.
