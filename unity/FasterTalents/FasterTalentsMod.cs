@@ -26,11 +26,15 @@ namespace FasterTalents
             // Registering the system is only half of it: the Burst bypass is
             // armed per world by BurstDisabler.AddWorld, whose sole caller is
             // ECSManager.StartEcs, and which snapshots whatever is registered by
-            // then. A dedicated server runs IMod.Init() *after* StartEcs, so
-            // without this pass OnUpdate keeps going through the Burst path, the
-            // prefix is never reached, and the XP boost is silently off exactly
-            // where it matters — skill XP is server-authoritative. A no-op on
-            // the client, where Init() runs first; the registry is a set.
+            // then. Through CK 1.2 a dedicated server ran IMod.Init() *after*
+            // StartEcs, so without this pass OnUpdate kept going through the
+            // Burst path, the prefix was never reached, and the XP boost was
+            // silently off exactly where it matters — skill XP is
+            // server-authoritative. A 1.3.0.5 server runs Init() before that
+            // snapshot, but the SDK promises no ordering and the mod still
+            // targets 1.2, so the pass stays. Harmless where Init() runs first:
+            // AddWorld only arms worlds that contain the system, and on 1.3 the
+            // game's own ResetWorlds + AddWorld pass replaces it anyway.
             foreach (var world in World.All)
                 BurstDisabler.AddWorld(world);
 

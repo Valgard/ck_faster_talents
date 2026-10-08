@@ -40,15 +40,19 @@ symlinked in from `../utils/`:
   talent-curve patch targets are managed (no Burst), but the XP-boost patch
   (`SkillXpBoostPatch`) targets the Burst-compiled `AddSkillValueSystem`, so Burst is
   disabled for that one system. That call is followed by a **manual
-  `BurstDisabler.AddWorld` pass over `World.All`**, which is what makes the boost work
-  on a **dedicated server**: registering the system only arms the bypass for worlds
-  `AddWorld` has already seen, and its sole caller `ECSManager.StartEcs` snapshots what
-  is registered at that moment. A dedicated server runs `IMod.Init()` *after*
-  `StartEcs`, so without the pass `OnUpdate` keeps running through the Burst path, the
-  prefix is never reached, and the boost is silently off exactly where skill XP is
-  awarded. No-op in the client ordering (the registry is a set); `EarlyInit()` is not an
+  `BurstDisabler.AddWorld` pass over `World.All`**, which is what made the boost work
+  on a **dedicated server through CK 1.2**: registering the system only arms the bypass
+  for worlds `AddWorld` has already seen, and its sole caller `ECSManager.StartEcs`
+  snapshots what is registered at that moment. Through 1.2 a dedicated server ran
+  `IMod.Init()` *after* `StartEcs`, so without the pass `OnUpdate` kept running through
+  the Burst path, the prefix was never reached, and the boost was silently off exactly
+  where skill XP is awarded. A freshly started 1.3.0.5 server runs `Init()` before that
+  snapshot, but the pass stays: the SDK promises no ordering and the mod is still tagged
+  for 1.2. Harmless where `Init()` runs first — not because the registry is a set, but
+  because `AddWorld` only arms worlds that contain the system, and on 1.3 the game's own
+  `ResetWorlds` + `AddWorld` pass replaces it anyway. `EarlyInit()` is not an
   alternative — `TypeManager` is not initialised there yet. See the parent
-  `../CLAUDE.md` for the full mechanism.
+  `../CLAUDE.md` and `../docs/ck/harmony-and-ecs.md` for the full mechanism.
 - **`ModConfig`** — the settings adapter. `enabled` and `xpMultiplier` are now **live
   in-game settings** driven by the Mod Settings Menu framework: `Init` registers a
   Toggle (`enabled`, default on) and a Choice (`xpMultiplier` in {1,2,3,5,10,20,50},
