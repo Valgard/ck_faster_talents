@@ -88,6 +88,15 @@ symlinked in from `../utils/`:
   `!GrantsPointAtLevel(level)`, so the per-level skill-up twinkle SFX plays on exactly
   the levels where `TalentPopupOnGrantPatch` does not fire the bell — no silent
   level-ups, no double audio.
+- **Neither `PlayerController` patch gates on `__instance.isLocal`, and neither needs
+  to.** A `PlayerController` patch on a method that runs per instance would fire once per
+  connected player (`../docs/ck/multiplayer-and-server.md`), but these two methods are
+  not of that kind: their only callers in the game, both in `SaveSkillsSystem.OnUpdate`,
+  go through `Manager.main.player` (`Pug.Other:191155`, `Pug.Other:191159` in the
+  1.3.0.5 client decompile; the dedicated-server build has the same two calls), and so
+  does this mod's own call. So they only ever run for the local player. The one way an
+  unguarded patch here could misfire is another mod calling either method on a remote
+  player's instance — none is known.
 - **Shared editor helpers** (`../utils/CLIBuildHelper.cs`, `CLIPublishHelper.cs`,
   `LocalizationGenerator.cs`, namespace `CoreKeeperModUtils`) — `CLIBuildHelper` wraps
   `ModBuilder.BuildMod` and `CLIPublishHelper` drives the mod.io publish, both for
